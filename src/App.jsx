@@ -58,15 +58,6 @@ function App() {
           path="/cuboid"
           element={
             <Cuboid
-              lng={lng}
-              setLng={setLng}
-              lat={lat}
-              setLat={setLat}
-              zoom={zoom}
-              setZoom={setZoom}
-              width={width}
-              height={height}
-              token={mapboxgl.accessToken}
               imgLink={imgLink}
               setImgLink={setImgLink}
               userData={userData}
