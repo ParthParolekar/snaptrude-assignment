@@ -1,18 +1,27 @@
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import SavedCard from "./SavedCard";
 
 // mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 mapboxgl.accessToken =
   "pk.eyJ1IjoicGFydGhwYXJvbGVrYXIiLCJhIjoiY2xmc2NjOGF1MDR2dzNobzQzOWMzNW5zaSJ9.J48HRSlIdHIHEPTAFxAaeA";
 
-const Map = ({ lng, setLng, lat, setLat, zoom, setZoom, width, height }) => {
+const Map = ({
+  lng,
+  setLng,
+  lat,
+  setLat,
+  zoom,
+  setZoom,
+  userData,
+  setUserData,
+  setImgLink,
+  token,
+  width,
+  height,
+}) => {
   const mapContainer = useRef();
-  //   const [lng, setLng] = useState(72.91);
-  //   const [lat, setLat] = useState(19.08);
-  //   const [zoom, setZoom] = useState(11);
-  //   const width = 500;
-  //   const height = 300;
 
   useEffect(() => {
     let map;
@@ -36,12 +45,14 @@ const Map = ({ lng, setLng, lat, setLat, zoom, setZoom, width, height }) => {
     return () => map.remove();
   }, []);
 
-  //   const [imageUrl, setImageUrl] = useState(null);
-  //   useEffect(() => {
-  //     setImageUrl(
-  //       `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${mapboxgl.accessToken}`
-  //     );
-  //   }, [lat, lng, width, height, zoom]);
+  const navigate = useNavigate();
+
+  const showCuboid = () => {
+    setImgLink(
+      `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${token}`
+    );
+    navigate("/cuboid");
+  };
 
   return (
     <div className="mx-auto w-full flex flex-col">
@@ -51,10 +62,22 @@ const Map = ({ lng, setLng, lat, setLat, zoom, setZoom, width, height }) => {
         className="rounded-md w-[500px] h-[300px] mx-auto"
       ></div>
       <Link to={"/cuboid"}>
-        <button className="mt-20 border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all">
+        <button
+          onClick={showCuboid}
+          className="mt-20 border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all"
+        >
           Show Cube
         </button>
       </Link>
+      <h3 className="mt-10 text-2xl font-bold">Saved</h3>
+      <div className="flex flex-wrap justify-center items-center gap-2">
+        {userData.length < 1 && (
+          <h3 className="text-xl font-semibold">No Maps Saved</h3>
+        )}
+        {userData.map((data) => (
+          <SavedCard cuboidImg={data} setImgLink={setImgLink} key={data} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -34,7 +34,6 @@ const onSceneReady = (scene, texture) => {
   // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
   var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
-  // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 1.7;
 
   //flipping texture on the backside of the mesh
@@ -69,26 +68,14 @@ const onRender = (scene) => {
   }
 };
 
-const Cuboid = ({
-  lng,
-  setLng,
-  lat,
-  setLat,
-  zoom,
-  setZoom,
-  width,
-  height,
-  token,
-}) => {
-  const [imgLink, setImgLink] = useState(
-    `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${token}`
-  );
-
-  useEffect(() => {
-    setImgLink(
-      `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${token}`
-    );
-  }, [lat, lng, width, height, zoom]);
+const Cuboid = ({ userData, setUserData, imgLink }) => {
+  const saveCuboid = () => {
+    if (userData.includes(imgLink)) {
+      setUserData(userData.filter((data) => data !== imgLink));
+    } else {
+      setUserData([...userData, imgLink]);
+    }
+  };
   return (
     <div className="relative flex flex-col items-center justify-between">
       <SceneComponent
@@ -98,15 +85,23 @@ const Cuboid = ({
         }}
         onRender={onRender}
         id="my-canvas"
-        className="w-[900px] h-[600px]"
+        className="w-[700px] h-[400px] rounded-md"
         // style={{ width: 900, height: 600 }}
       />
 
-      <Link to={"/"} className="">
-        <button className="mt-20 border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all">
-          Show Map
+      <div className="flex flex-col gap-2 mt-20 justify-center items-center">
+        <Link to={"/"}>
+          <button className="border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all">
+            Show Map
+          </button>
+        </Link>
+        <button
+          onClick={saveCuboid}
+          className="border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all"
+        >
+          {userData.includes(imgLink) ? "Remove" : "Save"}
         </button>
-      </Link>
+      </div>
     </div>
   );
 };
