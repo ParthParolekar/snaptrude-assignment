@@ -15,6 +15,7 @@ let box;
 
 const onSceneReady = (scene, texture) => {
   // This creates and positions a free camera (non-mesh)
+
   var camera = new ArcRotateCamera(
     "camera1",
     0,
@@ -59,7 +60,7 @@ const onSceneReady = (scene, texture) => {
 /**
  * Will run on every frame render.  We are spinning the box on y-axis.
  */
-const onRender = (scene) => {
+const onRender = (scene, texture) => {
   if (box !== undefined) {
     var deltaTimeInMillis = scene.getEngine().getDeltaTime();
 
@@ -76,6 +77,9 @@ const Cuboid = ({ userData, setUserData, imgLink }) => {
       setUserData([...userData, imgLink]);
     }
   };
+
+  // console.log(imgLink);
+
   return (
     <div className="relative flex flex-col items-center justify-between">
       <SceneComponent
@@ -85,16 +89,12 @@ const Cuboid = ({ userData, setUserData, imgLink }) => {
         }}
         onRender={onRender}
         id="my-canvas"
-        className="w-[700px] h-[400px] rounded-md"
+        className="w-[500px] h-[300px] rounded-md"
+        key={imgLink}
         // style={{ width: 900, height: 600 }}
       />
 
       <div className="flex flex-col gap-2 mt-20 justify-center items-center">
-        <Link to={"/"}>
-          <button className="border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all">
-            Show Map
-          </button>
-        </Link>
         <button
           onClick={saveCuboid}
           className="border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all"

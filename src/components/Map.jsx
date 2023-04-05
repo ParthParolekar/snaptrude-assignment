@@ -2,6 +2,7 @@ import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SavedCard from "./SavedCard";
+import Cuboid from "./Cuboid";
 
 // mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 mapboxgl.accessToken =
@@ -16,6 +17,7 @@ const Map = ({
   setZoom,
   userData,
   setUserData,
+  imgLink,
   setImgLink,
   token,
   width,
@@ -35,40 +37,41 @@ const Map = ({
         zoom, // starting zoom
       });
 
-      map.on("move", () => {
+      // map.on("move", () => {});
+
+      map.on("moveend", () => {
         setLng(map.getCenter().lng.toFixed(4));
         setLat(map.getCenter().lat.toFixed(4));
         setZoom(map.getZoom().toFixed(2));
+        setImgLink(
+          `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${map
+            .getCenter()
+            .lng.toFixed(4)},${map.getCenter().lat.toFixed(4)},${map
+            .getZoom()
+            .toFixed(2)},0/${width}x${height}?access_token=${token}`
+        );
       });
     }
 
     return () => map.remove();
   }, []);
 
-  const navigate = useNavigate();
-
-  const showCuboid = () => {
-    setImgLink(
-      `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${token}`
-    );
-    navigate("/cuboid");
-  };
-
   return (
     <div className="mx-auto w-full flex flex-col">
-      <div
-        id="map"
-        ref={mapContainer}
-        className="rounded-md w-[500px] h-[300px] mx-auto"
-      ></div>
-      <Link to={"/cuboid"}>
-        <button
-          onClick={showCuboid}
-          className="mt-20 border border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all"
-        >
-          Show Cube
-        </button>
-      </Link>
+      <div className="flex">
+        <Cuboid
+          imgLink={imgLink}
+          setImgLink={setImgLink}
+          userData={userData}
+          setUserData={setUserData}
+        />
+        <div
+          id="map"
+          ref={mapContainer}
+          className="rounded-md w-[500px] h-[300px] mx-auto"
+        ></div>
+      </div>
+
       <h3 className="mt-10 text-2xl font-bold">Saved</h3>
       <div className="flex flex-wrap justify-center items-center gap-2">
         {userData.length < 1 && (
