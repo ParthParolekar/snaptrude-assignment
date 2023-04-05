@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import Map from "./components/Map";
-import Cuboid from "./components/Cuboid";
 
 function App() {
   const [lng, setLng] = useState(72.91);
@@ -25,12 +24,6 @@ function App() {
     `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${mapboxgl.accessToken}`
   );
 
-  useEffect(() => {
-    setImgLink(
-      `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lng},${lat},${zoom},0/${width}x${height}?access_token=${mapboxgl.accessToken}`
-    );
-  }, [lat, lng, width, height, zoom]);
-
   return (
     <div className="App w-full">
       <Routes>
@@ -51,17 +44,6 @@ function App() {
               imgLink={imgLink}
               setImgLink={setImgLink}
               token={mapboxgl.accessToken}
-            />
-          }
-        />
-        <Route
-          path="/cuboid"
-          element={
-            <Cuboid
-              imgLink={imgLink}
-              setImgLink={setImgLink}
-              userData={userData}
-              setUserData={setUserData}
             />
           }
         />

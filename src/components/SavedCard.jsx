@@ -5,7 +5,6 @@ const SavedCard = ({ cuboidImg, setImgLink }) => {
   const navigate = useNavigate();
   const visitCuboid = () => {
     setImgLink(cuboidImg);
-    navigate("/cuboid");
   };
   return (
     <div className="flex flex-col">
@@ -16,7 +15,7 @@ const SavedCard = ({ cuboidImg, setImgLink }) => {
         onClick={visitCuboid}
         className="my-2 border w-full border-black rounded-md py-2 px-4 mx-auto hover:bg-black hover:text-white transition-all"
       >
-        Visit
+        Apply
       </button>
     </div>
   );
